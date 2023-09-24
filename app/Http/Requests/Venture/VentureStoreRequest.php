@@ -24,7 +24,7 @@ class VentureStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'venture_name'          => 'required',
+            'venture_name'          => 'required|string|min:2|max:65|regex:/^[^\d]+$/',
             'number_of_plot'        => 'required|integer|gt:0',
             'per_square_feet_price' => 'required|numeric|gt:0',
             'venture_brochure'      => 'nullable|mimes:pdf',
@@ -39,6 +39,7 @@ class VentureStoreRequest extends FormRequest
     {
         return [
             'venture_name.required'             => 'Venture Name Required',
+            'venture_name.regex'                => 'Venture Name cannot contains numbers',
             'number_of_plot.required'           => 'Number of Plot Required',
             'number_of_plot.integer'            => 'Provide Valid Number of Plot Required',
             'number_of_plot.gt'                 => 'Provide Valid Number of Plot',

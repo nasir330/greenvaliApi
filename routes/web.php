@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::post('venture-plots-update', [VenturePlotController::class, 'update'])->name('venture-plots-update');
     Route::post('venture-plot-image-upload', [VenturePlotController::class, 'venturePlotImageUpload'])->name('venture-plot-image-upload');
     Route::resource('users', UserController::class);
+    Route::get('users-adminlist',[UserController::class,'adminList'])->name('users.adminlist');
+    Route::get('users-customerlist',[UserController::class,'customerList'])->name('users.customerlist');
+    Route::get('users-stafflist',[UserController::class,'staffList'])->name('users.stafflist');
     Route::resource('sliders', SliderController::class);
     Route::resource('social-links', SocialLinkController::class);
     // 

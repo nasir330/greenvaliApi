@@ -27,11 +27,30 @@ class UserController extends Controller
             'users' => $data
         ]);
     }
-
-    public function adminlist()
+// Admin List page
+    public function adminList()
     {
-        $data = User::where('role_id ',1)->with(['userRole', 'userInfo'])->orderBy('id', 'ASC')->get();
-        return Inertia::render('User/List', [
+        $data = User::where('role_id',1)->with(['userRole', 'userInfo'])->get();
+        // $data = User::where('role_id','1')->get();
+        return Inertia::render('User/AdminList', [
+            'users' => $data
+        ]);
+    }
+    // customer list page
+    public function customerList()
+    {
+        $data = User::where('role_id',3)->with(['userRole', 'userInfo'])->get();
+        // $data = User::where('role_id','1')->get();
+        return Inertia::render('User/customerList', [
+            'users' => $data
+        ]);
+    }
+    // staff list page
+    public function staffList()
+    {
+        $data = User::where('role_id',2)->with(['userRole', 'userInfo'])->get();
+        // $data = User::where('role_id','1')->get();
+        return Inertia::render('User/staffList', [
             'users' => $data
         ]);
     }

@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::get('ventures-search/{search}',[VentureController::class,'searchVentures'])->name('ventures.search');
     Route::post('ventures-update', [VentureController::class, 'update'])->name('ventures-update');
     Route::resource('venture-plots', VenturePlotController::class);
+    Route::get('venture-plots-add/{id}', [VenturePlotController::class,'create'])->name('venture-plots-add');
+    Route::post('venture-plots-store', [VenturePlotController::class,'store'])->name('venture-plots-store');
     Route::post('venture-plots-update', [VenturePlotController::class, 'update'])->name('venture-plots-update');
     Route::post('venture-plot-image-upload', [VenturePlotController::class, 'venturePlotImageUpload'])->name('venture-plot-image-upload');
     Route::resource('users', UserController::class);

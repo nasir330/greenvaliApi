@@ -39,15 +39,19 @@ class VenturePlotController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(VenturePlot $venturePlot)
+    public function create($id)
     {
         $allCustomers = User::where('role_id', 3)->where('active_status', 1)->orderBy('id', 'DESC')->get(['id', DB::raw("CONCAT(`first_name`, ' ', `last_name`, ' (', `email`, ')') AS name")]);
         // $allCustomers = User::with('userInfo')->where('role_id', 3)->where('active_status', 1)->orderBy('id', 'DESC')->get(['id', 'first_name', 'last_name', 'email']);
         $allEmployee = User::where('role_id', 2)->where('active_status', 1)->orderBy('id', 'DESC')->get(['id', 'first_name', 'last_name', 'email']);
-        $venturePlot->load('venturePlotImages');
-        
+        // $venturePlot->load('venturePlotImages');
+        $veturePlot = VenturePlot::where('venture_id', $id)
+        ->orderByDesc('plot_id') // Order by plot_id in descending order to get the maximum value
+        ->first(); // Retrieve the first row (which will have the maximum plot_id)
+    //    dd($veturePlot);
         return Inertia::render('VenturePlot/create', [
-            'venture_plot'  => $venturePlot,
+            'venture_plot'=> $veturePlot,
+            // 'venture_plot'  => $venturePlot,
             'all_customers' => $allCustomers,
             'all_staffs'    => $allEmployee,
         ]);
@@ -56,9 +60,24 @@ class VenturePlotController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        // dd($request->all());
+         $ventureData =  Venture::where('id', $request->venture_id)->first();
+         $numberOfPlot = $ventureData->number_of_plot;
+         $numberOfUpdatePlot = $ventureData->number_of_plot+$request->number_of_plot;
+        Venture::where('id', $request->venture_id)->update([
+            'number_of_plot'=> $numberOfUpdatePlot,
+        ]);
+        //  dd($ventureData);       
+        for ($i = 1; $i <= $request->number_of_plot; $i++) {
+            $newVenturePlot = new VenturePlot;
+            $newVenturePlot->venture_id = $request->venture_id;
+            $newVenturePlot->plot_id =$numberOfPlot+$i;
+            $newVenturePlot->plot_name = $ventureData->venture_name . '-Plot Id-' . $numberOfPlot+$i;
+            $newVenturePlot->save();
+        }
+        return Redirect::route('venture-plots.index')->with(['status' => 'success', 'message' => 'Venture Plot created Successfully']);
     }
 
     /**

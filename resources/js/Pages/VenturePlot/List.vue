@@ -127,7 +127,7 @@ watch(search, (value) => {
                     </td>
                     <td>
                       <Link
-                        :href="route('venture-plots.create', vplot)"
+                        :href="route('venture-plots-add', vplot.venture_id)"
                         class="btn btn-social-icon"
                         ><i class="fa fa-plus"></i
                       ></Link>

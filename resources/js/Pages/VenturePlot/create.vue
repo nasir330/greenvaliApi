@@ -37,7 +37,7 @@
             <form @submit.prevent="submit">
               <div class="box-body">
                 <div class="row">
-                  <div class="col-md-12">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label for="plotName" class="control-label">Plot Name </label>
                       <input
@@ -46,7 +46,14 @@
                         class="form-control"
                         id="plotName"
                         placeholder="Enter Plot Name"
-                        required
+                        disabled
+                      />
+                      <input
+                        type="hidden"
+                        v-model="form.venture_id"
+                        class="form-control"
+                        id="ventureId"
+                        placeholder="Enter Plot Name"
                       />
                     </div>
                     <span class="help-block" style="color: red">{{
@@ -54,6 +61,25 @@
                     }}</span>
                   </div>
                   <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="plotNumber" class="control-label"
+                        >Number of Plots <span class="text-danger">*</span></label
+                      >
+                      <input
+                        type="number"
+                        v-model="form.number_of_plot"
+                        class="form-control"
+                        id="plotNumber"
+                        placeholder="Enter Number of Plots"
+                        required
+                      />
+                    </div>
+                    <span class="help-block" style="color: red">{{
+                      errors.number_of_plot
+                    }}</span>
+                  </div>
+
+                  <!-- <div class="col-md-6">
                     <div class="form-group">
                       <label for="numberOfSquareFeet" class="control-label"
                         >Number of Square Feet</label
@@ -154,20 +180,20 @@
                         :enable-time-picker="false"
                       />
                     </div>
-                  </div>
+                  </div> -->
                 </div>
               </div>
               <div class="box-footer">
                 <Link :href="route('venture-plots.index')" class="btn btn-default"
                   >Cancel</Link
                 >
-                <button type="submit" class="btn btn-info pull-right">Update</button>
+                <button type="submit" class="btn btn-info pull-right">Create</button>
               </div>
             </form>
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-xs-12">
           <div
             class="alert alert-success alert-dismissible"
@@ -238,7 +264,7 @@
             </form>
           </div>
         </div>
-      </div>
+      </div> -->
     </section>
   </AuthenticatedLayout>
 </template>
@@ -277,6 +303,7 @@ export default {
   created() {
     // console.log(this.$props.venture_plot)
     this.form.plot_id = this.$props.venture_plot.id;
+    this.form.venture_id = this.$props.venture_plot.venture_id;
     this.form.plot_name = this.$props.venture_plot.plot_name;
 
     this.plotForm.venture_id = this.$props.venture_plot.venture_id;
@@ -299,12 +326,7 @@ export default {
       form: {
         plot_id: "",
         plot_name: "",
-        number_of_square_feet: "",
-        total_price: "",
-        customer_id: "",
-        staff_id: "",
-        sale_date: "",
-        handover_date: "",
+        number_of_plot: "",
       },
       plotForm: this.$inertia.form({
         venture_id: "",
@@ -317,23 +339,26 @@ export default {
   methods: {
     submit() {
       console.log(this.form);
-      if (Object.keys(this.form.customer_id).length > 0) {
-        let formData = {
-          plot_id: this.form.plot_id,
-          plot_name: this.form.plot_name,
-          number_of_square_feet: this.form.number_of_square_feet,
-          total_price: this.form.total_price,
-          customer_id: this.form.customer_id.id,
-          staff_id: this.form.staff_id,
-          sale_date: this.formatDate(this.form.sale_date),
-          handover_date: this.formatDate(this.form.handover_date),
-        };
-        console.log(formData);
-        const form = useForm({});
-        form.post(route("venture-plots-update", formData));
-      } else {
-        alert("Customer Select is Requrired");
-      }
+      let formData = {
+        plot_id: this.form.plot_id,
+        venture_id: this.plotForm.venture_id,
+        plot_name: this.form.plot_name,
+        number_of_plot: this.form.number_of_plot,
+        number_of_square_feet: this.form.number_of_square_feet,
+        total_price: this.form.total_price,
+        // customer_id: this.form.customer_id.id,
+        staff_id: this.form.staff_id,
+        sale_date: this.formatDate(this.form.sale_date),
+        handover_date: this.formatDate(this.form.handover_date),
+      };
+      console.log(formData);
+      const form = useForm({});
+      form.post(route("venture-plots-store", formData));
+      // if (Object.keys(this.form.customer_id).length > 0) {
+
+      // } else {
+      //   alert("Customer Select is Requrired");
+      // }
     },
     formatDate(date) {
       if (date != null && date != "") {
